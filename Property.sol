@@ -1,97 +1,112 @@
 pragma solidity ^0.8.0;
 
-import "./Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-contract Factory is Ownable {
-    IERC20 public token = IERC20(0x37829530298c28CB7695c172c891eb9CA4F9A0f7);
+contract Factory {
+    ERC20 public token;
     
-    uint public price = 1 * 10**18;
+    mapping(string => address) propertyByName;
     
-    constructor(){
-        owner = msg.sender;
+    constructor(address _token){
+        token = ERC20(_token);
     }
     
-    event Price(uint price);
-    
-    function setPrice(uint _price) external {
-        require(msg.sender == owner);
-        emit Price(_price);
-        price = _price;
+    function create(string calldata _name) external returns (Property) {
+        require(propertyByName[_name] == address(0));
+        
+        Property property = new Property(msg.sender, _name);
+        propertyByName[_name] = address(property);
+        
+        return property;
     }
     
-    event Create(address indexed property, address indexed owner);
-    
-    function create() external returns (address) {
-        require(token.transferFrom(msg.sender, owner, price));
-        
-        Property property = new Property(msg.sender);
-        
-        emit Create(address(property), msg.sender);
-        
-        return address(property);
+    function get(string calldata _name) external view returns (Property) {
+        address addr = propertyByName[_name];
+        require(addr != address(0));
+        return Property(addr);
     }
-
 }
 
-contract Property is Ownable {
+contract Token is ERC20 {
+    address public controller;
+    
+    constructor(
+        string memory _name,
+        string memory _symbol
+    ) ERC20(_name, _symbol) {
+        controller = msg.sender;
+    }
+    
+    function mint(address recipient, uint amount) external {
+        require(msg.sender == controller);
+        _mint(recipient, amount);
+    }
+    
+    function burn(address recipient, uint amount) external {
+        require(msg.sender == controller);
+        _burn(recipient, amount);
+    }
+}
+
+contract Property {
+    address public owner;
     Factory public factory;
-    IERC20 public token;
-    
-    mapping(address => uint) balances;
-    
-    constructor(address _owner){
+    Token public token;
+
+    constructor(
+        address _owner,
+        string memory _name
+    )  {
         owner = _owner;
         factory = Factory(msg.sender);
-        token = factory.token();
+        string memory fsymbol = factory.token().symbol();
+        string memory symbol = string(abi.encodePacked(fsymbol,".", _name));
+        token = new Token(_name, symbol);
     }
     
-    function price() external view returns (uint256) {
-        return token.balanceOf(address(this));
-    }
-    
-    function balanceOf(address account) external view returns (uint256) {
-        return balances[account];
+    function price() external view returns (uint) {
+        return token.totalSupply();
     }
     
     event Deposit(address indexed account, uint amount);
     
     function deposit(uint amount) external {
-        require(amount > 0);
-        
-        require(token.transferFrom(msg.sender, address(this), amount));
-        
-        balances[msg.sender] += amount;
-        
+        require(factory.token().transferFrom(
+            msg.sender, address(this), amount));
+        token.mint(msg.sender, amount);
         emit Deposit(msg.sender, amount);
     }
     
     event Withdraw(address indexed account, uint amount);
     
-    function withdraw(uint256 amount) external {
-        require(balances[msg.sender] >= amount);
-        
-        require(token.transfer(msg.sender, amount));
-        
-        balances[msg.sender] -= amount;
-        
+    function withdraw(uint amount) external {
+        require(factory.token().transferFrom(
+            address(this), msg.sender, amount));
+        token.burn(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
     }
-
-    event Buy(address indexed owner, uint price);
+    
+    event Buy(address indexed buyer);
     
     function buy() external {
         require(msg.sender != owner);
         
-        uint amount = token.balanceOf(address(this));
-        uint fee = amount / 100;
-        
-        require(token.transferFrom(msg.sender, factory.owner(), fee));
-        require(token.transferFrom(msg.sender, owner, amount - fee));
-        
+        uint _price = token.totalSupply();
+        require(factory.token().transferFrom(
+            msg.sender, address(this), _price));
+        token.mint(owner, _price);
+            
         owner = msg.sender;
+        emit Buy(msg.sender);
+    }
+    
+    event Transfer(address indexed target);
+    
+    function transfer(address target) external {
+        require(msg.sender == owner);
+        require(target != address(0));
         
-        emit Buy(owner, amount);
+        owner = target;
+        emit Transfer(target);
     }
 }
