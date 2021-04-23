@@ -11,6 +11,9 @@ contract Factory {
         token = ERC20(_token);
     }
     
+    /**
+     * Create a new property
+     **/
     function create(string calldata _name) external returns (Property) {
         require(propertyByName[_name] == address(0));
         
@@ -20,6 +23,9 @@ contract Factory {
         return property;
     }
     
+    /**
+     * Retrieve an existing property
+     **/
     function get(string calldata _name) external view returns (Property) {
         address addr = propertyByName[_name];
         require(addr != address(0));
@@ -56,20 +62,31 @@ contract Property {
     constructor(
         address _owner,
         string memory _name
-    )  {
+    ) {
         owner = _owner;
         factory = Factory(msg.sender);
+        
+        string memory fname = factory.token().name();
+        string memory name = string(abi.encodePacked(fname,": ", _name));
+        
         string memory fsymbol = factory.token().symbol();
         string memory symbol = string(abi.encodePacked(fsymbol,".", _name));
-        token = new Token(_name, symbol);
+        
+        token = new Token(name, symbol);
     }
     
-    function price() external view returns (uint) {
+    /**
+     * Get the current price of the property
+     **/
+    function price() public view returns (uint) {
         return token.totalSupply();
     }
     
     event Deposit(address indexed account, uint amount);
     
+    /**
+     * Deposit some tokens and increase the price
+     **/
     function deposit(uint amount) external {
         require(factory.token().transferFrom(
             msg.sender, address(this), amount));
@@ -79,22 +96,26 @@ contract Property {
     
     event Withdraw(address indexed account, uint amount);
     
+    /**
+     * Withdraw some tokens and decrease the price
+     **/
     function withdraw(uint amount) external {
-        require(factory.token().transferFrom(
-            address(this), msg.sender, amount));
+        require(factory.token()
+            .transfer(msg.sender, amount));
         token.burn(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
     }
     
     event Buy(address indexed buyer);
     
+    /**
+     * Buy the property at the current price
+     **/
     function buy() external {
         require(msg.sender != owner);
         
-        uint _price = token.totalSupply();
         require(factory.token().transferFrom(
-            msg.sender, address(this), _price));
-        token.mint(owner, _price);
+            msg.sender, owner, price()));
             
         owner = msg.sender;
         emit Buy(msg.sender);
@@ -102,6 +123,9 @@ contract Property {
     
     event Transfer(address indexed target);
     
+    /**
+     * Transfer the property to someone
+     **/
     function transfer(address target) external {
         require(msg.sender == owner);
         require(target != address(0));
