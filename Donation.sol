@@ -11,28 +11,28 @@ contract Donation {
         oracle = _oracle;
     }
     
-    mapping (uint => uint) posts;
+    mapping (string => uint) public pendings;
     
-    event Post(uint indexed id, uint amount, uint gas);
+    event Transfer(string indexed uri, uint amount, uint gas);
     
     /**
      * Called by the user
      **/
-    function post(uint id, uint amount) external payable {
+    function transfer(string memory uri, uint amount) external payable {
         require(msg.value > 0);
         require(token.transferFrom(msg.sender, oracle, amount));
-        emit Post(id, amount, msg.value);
-        posts[id] = amount;
+        emit Transfer(uri, amount, msg.value);
+        pendings[uri] = amount;
     }
     
     /**
      * Called by the oracle
      **/
-    function _post(uint id, address target) external {
+    function _transfer(string memory uri, address target) external {
         require(msg.sender == oracle);
-        uint amount = posts[id];
+        uint amount = pendings[uri];
         require(amount > 0);
         require(token.transferFrom(oracle, target, amount));
-        posts[id] = 0;
+        pendings[uri] = 0;
     }
 }

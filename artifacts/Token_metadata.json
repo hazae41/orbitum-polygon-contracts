@@ -6,18 +6,7 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_symbol",
-						"type": "string"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -139,37 +128,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "recipient",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "burn",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "controller",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -227,24 +185,6 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "recipient",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "mint",
-				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -388,7 +328,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Property.sol": "Token"
+			"contracts/Token.sol": "Token"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -434,11 +374,11 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"contracts/Property.sol": {
-			"keccak256": "0x3409859205006fca3fcc29af184fd6ee0b213900946bd4d8977695ce098b07c7",
+		"contracts/Token.sol": {
+			"keccak256": "0x551df715a79b6db39c241d09b5f3ebbc10a45bf7786b91f11cfa17e3f5e53f1b",
 			"urls": [
-				"bzz-raw://a5250934a33e50b4d38414302ee2dddd5bcd80d55ec77a60008784094e35ac85",
-				"dweb:/ipfs/QmU5MZAoxZs45hY7kJQ6rpGwi9gWATH4bVLn993CdJiVwc"
+				"bzz-raw://abad3d8350ed0d076f7d4e1a53b9d516d430aea688c72394ad533860e1adc491",
+				"dweb:/ipfs/QmVTCcWR8FBZ8PzzF64cj471FKZRWRMg19MC3ajgVYXk9Z"
 			]
 		}
 	},

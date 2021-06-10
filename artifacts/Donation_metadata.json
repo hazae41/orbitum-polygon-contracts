@@ -26,9 +26,9 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "uri",
+						"type": "string"
 					},
 					{
 						"indexed": false,
@@ -43,15 +43,15 @@
 						"type": "uint256"
 					}
 				],
-				"name": "Post",
+				"name": "Transfer",
 				"type": "event"
 			},
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "uri",
+						"type": "string"
 					},
 					{
 						"internalType": "address",
@@ -59,7 +59,7 @@
 						"type": "address"
 					}
 				],
-				"name": "_post",
+				"name": "_transfer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -67,19 +67,20 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "pendings",
+				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "post",
-				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -94,6 +95,24 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "uri",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -104,10 +123,10 @@
 		"userdoc": {
 			"kind": "user",
 			"methods": {
-				"_post(uint256,address)": {
+				"_transfer(string,address)": {
 					"notice": "Called by the oracle*"
 				},
-				"post(uint256,uint256)": {
+				"transfer(string,uint256)": {
 					"notice": "Called by the user*"
 				}
 			},
@@ -139,10 +158,10 @@
 			]
 		},
 		"contracts/Donation.sol": {
-			"keccak256": "0xfb129ea86eb732fa434586c8425914d1adfee6bd99058664f4059a3f401f6fc4",
+			"keccak256": "0x2cc29b1f79722996b5bc72ee14f07459623d6f7f5e20d3f2e219ace4ceeda0ee",
 			"urls": [
-				"bzz-raw://bfda95ef0d211bd7ccca102e79fa6758649bcfdcbf58b7460efb3ef42895b7d7",
-				"dweb:/ipfs/QmPWoMeHbxozQQNhHmDR3XTK9w3QKGp45jeVRQ5vCtPXQk"
+				"bzz-raw://66664934e038fe3d101abfdf179360b72e55d15229de9420ac6cfb7ac5d35f9a",
+				"dweb:/ipfs/QmUcvet2oL1vKZC89FSzyWto2VseaVR9Sg1ceEFLUTx5Jt"
 			]
 		}
 	},
