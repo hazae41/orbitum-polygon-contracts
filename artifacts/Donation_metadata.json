@@ -59,7 +59,7 @@
 						"type": "address"
 					}
 				],
-				"name": "_transfer",
+				"name": "flush",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -123,7 +123,7 @@
 		"userdoc": {
 			"kind": "user",
 			"methods": {
-				"_transfer(string,address)": {
+				"flush(string,address)": {
 					"notice": "Called by the oracle*"
 				},
 				"transfer(string,uint256)": {
@@ -158,10 +158,10 @@
 			]
 		},
 		"contracts/Donation.sol": {
-			"keccak256": "0x2cc29b1f79722996b5bc72ee14f07459623d6f7f5e20d3f2e219ace4ceeda0ee",
+			"keccak256": "0xb10db6d8971da398be19f4d2e8872db63f5ec663a9644ac0676090e337fb8d54",
 			"urls": [
-				"bzz-raw://66664934e038fe3d101abfdf179360b72e55d15229de9420ac6cfb7ac5d35f9a",
-				"dweb:/ipfs/QmUcvet2oL1vKZC89FSzyWto2VseaVR9Sg1ceEFLUTx5Jt"
+				"bzz-raw://3900a537ec1e14c023c78b5955b55160387b56641a8449ff75c27d0fd463a77d",
+				"dweb:/ipfs/QmZ2sKs4g2KFJSZspLbLztc7HrNAhFBkR45wqSaf3LNpmW"
 			]
 		}
 	},

@@ -28,7 +28,7 @@ contract Donation {
     /**
      * Called by the oracle
      **/
-    function _transfer(string memory uri, address target) external {
+    function flush(string memory uri, address target) external {
         require(msg.sender == oracle);
         uint amount = pendings[uri];
         require(amount > 0);
