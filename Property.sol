@@ -11,6 +11,8 @@ contract Factory {
         token = ERC20(_token);
     }
     
+    event Create(string name, address owner);
+    
     /**
      * Create a new property
      **/
@@ -19,6 +21,7 @@ contract Factory {
         
         Property property = new Property(msg.sender, _name);
         propertyByName[_name] = address(property);
+        emit Create(_name, msg.sender);
         
         return property;
     }
