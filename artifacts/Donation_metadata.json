@@ -13,7 +13,7 @@
 						"type": "address"
 					},
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "_oracle",
 						"type": "address"
 					}
@@ -26,6 +26,12 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "string",
 						"name": "uri",
 						"type": "string"
@@ -158,10 +164,10 @@
 			]
 		},
 		"contracts/Donation.sol": {
-			"keccak256": "0xb10db6d8971da398be19f4d2e8872db63f5ec663a9644ac0676090e337fb8d54",
+			"keccak256": "0x7322cb44ac283494c56d920242c2813d12ef1bc023349ca7436ed99cb3369509",
 			"urls": [
-				"bzz-raw://3900a537ec1e14c023c78b5955b55160387b56641a8449ff75c27d0fd463a77d",
-				"dweb:/ipfs/QmZ2sKs4g2KFJSZspLbLztc7HrNAhFBkR45wqSaf3LNpmW"
+				"bzz-raw://65e8699f1cf131a5b3a848a76e187784186501cbb21fe3096b9a79bf9a1d6c0a",
+				"dweb:/ipfs/Qmc46ShCSuUW1NJk8aCzYJFnFvwi4c4sroJPPnzkckPjF8"
 			]
 		}
 	},
