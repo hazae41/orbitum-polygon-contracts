@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Donator {
     IERC20 public token;
-    address payable oracle;
+    address payable public oracle;
     
     constructor(address _token, address payable _oracle){
         token = IERC20(_token);
