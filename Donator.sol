@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract Donation {
+contract Donator {
     IERC20 public token;
     address payable oracle;
     
