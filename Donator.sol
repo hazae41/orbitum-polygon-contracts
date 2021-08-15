@@ -3,37 +3,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Donator {
-    IERC20 public token;
-    address payable public oracle;
+    event Donation(IERC20 indexed token, address indexed sender, address indexed receiver, string uri, uint amount);
     
-    constructor(address _token, address payable _oracle){
-        token = IERC20(_token);
-        oracle = _oracle;
-    }
-    
-    mapping (string => uint) public pendings;
-    
-    event Transfer(address indexed sender, string uri, uint amount, uint gas);
-    
-    /**
-     * Called by the user
-     **/
-    function transfer(string memory uri, uint amount) external payable {
-        require(msg.value > 0);
-        require(token.transferFrom(msg.sender, address(this), amount));
-        emit Transfer(msg.sender, uri, amount, msg.value);
-        oracle.transfer(msg.value);
-        pendings[uri] += amount;
-    }
-    
-    /**
-     * Called by the oracle
-     **/
-    function flush(string memory uri, address target) external {
-        require(msg.sender == oracle);
-        uint amount = pendings[uri];
+    function donate(IERC20 token, address payable receiver, string memory uri, uint amount) external {
         require(amount > 0);
-        require(token.transfer(target, amount));
-        pendings[uri] = 0;
+        require(token.transferFrom(msg.sender, receiver, amount));
+        emit Donation(token, msg.sender, receiver, uri, amount);
     }
 }
