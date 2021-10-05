@@ -3,137 +3,114 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Factory {
-    ERC20 public token;
+    ERC20 private $token;
     
-    mapping(string => address) propertyByName;
+    mapping (string => Property) private $properties;
     
-    constructor(address _token){
-        token = ERC20(_token);
+    constructor(ERC20 _token){
+        $token = _token;
     }
     
-    event Create(string name, address owner);
+    /**
+     * @dev Get the token
+     */
+    function token() external view returns (ERC20) {
+        return $token;
+    }
+    
+    event Create(string indexed name, address indexed owner);
     
     /**
-     * Create a new property
+     * @dev Create a new property
      **/
     function create(string calldata _name) external returns (Property) {
-        require(propertyByName[_name] == address(0));
+        require($properties[_name] == Property(address(0)));
         
-        Property property = new Property(msg.sender, _name);
-        propertyByName[_name] = address(property);
+        string memory _symbol = string(abi.encodePacked($token.symbol(),".", _name));
+        
+        Property _property = new Property(_name, _symbol, msg.sender, $token);
+        $properties[_name] = _property;
         emit Create(_name, msg.sender);
         
-        return property;
+        return _property;
     }
     
     /**
-     * Retrieve an existing property
+     * @dev Retrieve an existing property
      **/
     function get(string calldata _name) external view returns (Property) {
-        address addr = propertyByName[_name];
-        require(addr != address(0));
-        return Property(addr);
+        Property property = $properties[_name];
+        require(address(property) != address(0));
+        return property;
     }
 }
 
-contract Token is ERC20 {
-    address public controller;
+contract Property is ERC20 {
+    address private $owner;
+    ERC20 private $token;
     
     constructor(
         string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol) {
-        controller = msg.sender;
-    }
-    
-    function mint(address recipient, uint amount) external {
-        require(msg.sender == controller);
-        _mint(recipient, amount);
-    }
-    
-    function burn(address recipient, uint amount) external {
-        require(msg.sender == controller);
-        _burn(recipient, amount);
-    }
-}
-
-contract Property {
-    address public owner;
-    Factory public factory;
-    Token public token;
-
-    constructor(
+        string memory _symbol,
         address _owner,
-        string memory _name
-    ) {
-        owner = _owner;
-        factory = Factory(msg.sender);
-        
-        string memory fname = factory.token().name();
-        string memory name = string(abi.encodePacked(fname,": ", _name));
-        
-        string memory fsymbol = factory.token().symbol();
-        string memory symbol = string(abi.encodePacked(fsymbol,".", _name));
-        
-        token = new Token(name, symbol);
+        ERC20 _token
+    ) ERC20(_name, _symbol) {
+        $token = _token;
+        $owner = _owner;
     }
     
     /**
-     * Get the current price of the property
-     **/
-    function price() public view returns (uint) {
-        return token.totalSupply();
+     * @dev Returns the current owner
+     */
+    function owner() external view returns (address) {
+        return $owner;
     }
     
     event Deposit(address indexed account, uint amount);
     
-    /**
-     * Deposit some tokens and increase the price
+     /**
+     * @dev Deposit some tokens and increase the price
      **/
-    function deposit(uint amount) external {
-        require(factory.token().transferFrom(
-            msg.sender, address(this), amount));
-        token.mint(msg.sender, amount);
-        emit Deposit(msg.sender, amount);
+    function deposit(uint _amount) external {
+        require($token.transferFrom(msg.sender, address(this), _amount));
+        _mint(msg.sender, _amount);
+        emit Deposit(msg.sender, _amount);
     }
     
     event Withdraw(address indexed account, uint amount);
     
     /**
-     * Withdraw some tokens and decrease the price
+     * @dev Withdraw some tokens and decrease the price
      **/
-    function withdraw(uint amount) external {
-        require(factory.token()
-            .transfer(msg.sender, amount));
-        token.burn(msg.sender, amount);
-        emit Withdraw(msg.sender, amount);
+    function withdraw(uint _amount) external {
+        require($token.transfer(msg.sender, _amount));
+        _burn(msg.sender, _amount);
+        emit Withdraw(msg.sender, _amount);
     }
     
-    event Buy(address indexed buyer);
+    event Buy(address indexed oldOwner, address indexed newOwner);
     
     /**
      * Buy the property at the current price
      **/
     function buy() external {
-        require(msg.sender != owner);
-        
-        require(factory.token().transferFrom(
-            msg.sender, owner, price()));
+        require(msg.sender != $owner);
+        require($token.transferFrom(msg.sender, $owner, totalSupply()));
             
-        owner = msg.sender;
-        emit Buy(msg.sender);
+        emit Buy($owner, msg.sender);
+        $owner = msg.sender;
     }
     
-    event Transfer(address indexed target);
+    event Send(address indexed oldOwner, address indexed newOwner);
     
     /**
-     * Transfer the property to someone
+     * Send the property to someone
      **/
-    function transfer(address target) external {
-        require(msg.sender == owner);
-        require(target != address(0));
+    function send(address _target) external {
+        require(msg.sender == $owner);
+        require(_target != address(0));
         
-        owner = target;
-        emit Transfer(target);
+        emit Buy($owner, _target);
+        $owner = _target;
     }
 }
