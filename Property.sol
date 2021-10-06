@@ -91,7 +91,7 @@ contract Property is ERC20 {
     event Buy(address indexed oldOwner, address indexed newOwner);
     
     /**
-     * Buy the property at the current price
+     * @dev Buy the property at the current price
      **/
     function buy() external {
         require(msg.sender != $owner);
@@ -104,7 +104,7 @@ contract Property is ERC20 {
     event Send(address indexed oldOwner, address indexed newOwner);
     
     /**
-     * Send the property to someone
+     * @dev Send the property to someone
      **/
     function send(address _target) external {
         require(msg.sender == $owner);
