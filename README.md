@@ -1,18 +1,34 @@
-# Token (ORBTM)
+# Oribtum Contracts
+
+## Style guide
+
+### Variable naming
+
+Variables follow this simple naming convention
+
+- `var` : public variable
+- `$var` : private variable
+- `_var` : scoped variable
+
+## Contracts
+
+### Token (ORBTM)
 
 An ERC20 with 1M supply.
 
-# Donator
+### Donator
 
 A simple address-to-address transfer that takes an extra URI parameter.
 
-# Factory
+Off-chain dApps can follow the `Donate` event and grab the URI associated with each transaction.
+
+### Factory
 
 Factory is a string-to-contract mapping with unique names.
 
 Names are NOT enforced on-chain but can be enforced off-chain by dApps.
 
-# Property
+### Property
 
 Properties are ERC20 that are 1:1 mapped with ORBTM using `deposit` (mint) and `withdraw` (burn).
 
