@@ -1,4 +1,4 @@
-# Oribtum Contracts
+# Orbitum Contracts
 
 ## Style guide
 
