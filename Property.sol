@@ -42,7 +42,7 @@ contract Property is ERC20 {
         string memory _name,
         address _owner,
         ERC20 _token
-    ) ERC20(_name, $token.symbol()) {
+    ) ERC20(_name, _token.symbol()) {
         $token = _token;
         $owner = _owner;
     }
