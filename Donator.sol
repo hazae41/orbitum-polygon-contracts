@@ -15,9 +15,9 @@ contract Donator {
     
     event Donation(address indexed sender, address indexed receiver, string uri, uint amount);
     
-    function donate(address payable receiver, string memory uri, uint amount) external {
-        require(amount > 0, "Donator: invalid amount");
-        require($token.transferFrom(msg.sender, receiver, amount));
-        emit Donation(msg.sender, receiver, uri, amount);
+    function donate(address payable _receiver, string memory _uri, uint _amount) external {
+        require(_amount > 0, "Donator: invalid amount");
+        require($token.transferFrom(msg.sender, _receiver, _amount));
+        emit Donation(msg.sender, _receiver, _uri, _amount);
     }
 }

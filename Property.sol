@@ -28,9 +28,9 @@ contract Factory {
     }
     
     function get(string calldata _name) external view returns (Property) {
-        Property property = $properties[_name];
-        require(address(property) != address(0));
-        return property;
+        Property _property = $properties[_name];
+        require(address(_property) != address(0));
+        return _property;
     }
 }
 
